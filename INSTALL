@@ -15,6 +15,8 @@ INSTALL file for SLiM
      or
  - mkdir build ; cd build ; cmake .. -DUSE_CONSOLEKIT=yes
    to enable CONSOLEKIT support
+ - mkdir build ; cd build ; cmake .. -DHAVE_SYSTEMD=no
+   to prevent installation of systemd related stuff (unit file)
  - make && make install
  
 2. automatic startup
