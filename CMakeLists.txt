@@ -162,6 +162,13 @@ else(USE_CONSOLEKIT)
 	message("\tConsoleKit disabled")
 endif(USE_CONSOLEKIT)
 
+# systemd
+if(HAVE_SYSTEMD)
+    message("\tInstall systemd files")
+else(HAVE_SYSTEMD)
+    message("\tDo not install systemd files")
+endif(HAVE_SYSTEMD)
+
 # system librarys
 find_library(M_LIB m)
 find_library(RT_LIB rt)
