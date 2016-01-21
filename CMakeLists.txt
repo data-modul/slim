@@ -47,6 +47,12 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -g -O2")
 set(CMAKE_CPP_FLAGS "${CMAKE_CPP_FLAGS} -Wall -g -O2")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -g -O2")
 
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    set(HAVE_SYSTEMD yes CACHE BOOL "Install systemd related files")
+else()
+    set(HAVE_SYSTEMD no CACHE BOOL "Do not install systemd related files")
+endif()
+
 # source 
 set(slim_srcs
 	main.cpp
@@ -156,6 +162,13 @@ else(USE_CONSOLEKIT)
 	message("\tConsoleKit disabled")
 endif(USE_CONSOLEKIT)
 
+# systemd
+if(HAVE_SYSTEMD)
+    message("\tInstall systemd files")
+else(HAVE_SYSTEMD)
+    message("\tDo not install systemd files")
+endif(HAVE_SYSTEMD)
+
 # system librarys
 find_library(M_LIB m)
 find_library(RT_LIB rt)
@@ -221,7 +234,9 @@ endif(BUILD_SLIMLOCK)
 ####### install
 # slim
 install(TARGETS slim RUNTIME DESTINATION bin)
-install(TARGETS slimlock RUNTIME DESTINATION bin)
+if(BUILD_SLIMLOCK)
+    install(TARGETS slimlock RUNTIME DESTINATION bin)
+endif(BUILD_SLIMLOCK)
 
 if (BUILD_SHARED_LIBS)
 	set_target_properties(libslim PROPERTIES
@@ -236,12 +251,14 @@ endif (BUILD_SHARED_LIBS)
 
 # man file
 install(FILES slim.1 DESTINATION ${MANDIR}/man1/)
-install(FILES slimlock.1 DESTINATION ${MANDIR}/man1/)
+if(BUILD_SLIMLOCK)
+    install(FILES slimlock.1 DESTINATION ${MANDIR}/man1/)
+endif(BUILD_SLIMLOCK)
 # configure
 install(FILES slim.conf DESTINATION ${SYSCONFDIR})
 # systemd service file
-if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+if(HAVE_SYSTEMD)
 	install(FILES slim.service DESTINATION ${LIBDIR}/systemd/system)
-endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+endif(HAVE_SYSTEMD)
 # themes directory
 subdirs(themes)
