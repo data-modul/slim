@@ -285,6 +285,7 @@ void App::Run() {
 
 		CreateServerAuth();
 		StartServer();
+		SetupServer();
 #endif
 
 	}
@@ -982,6 +983,14 @@ int App::StartServer() {
 	serverStarted = true;
 
 	return ServerPID;
+}
+
+int App::SetupServer() {
+	string setupCommand = cfg->getOption("xsetup_cmd");
+	if (setupCommand != "")
+		logStream << APPNAME << ": Setting X up, using " << setupCommand << ": ";
+		int rc = system(setupCommand.c_str());
+		logStream << WEXITSTATUS(rc) << endl;
 }
 
 jmp_buf CloseEnv;

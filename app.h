@@ -72,6 +72,7 @@ private:
 
 	/* Server functions */
 	int StartServer();
+	int SetupServer();
 	int ServerTimeout(int timeout, char *string);
 	int WaitForServer();
 
